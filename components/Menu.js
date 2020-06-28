@@ -1,5 +1,5 @@
 /* This is the data we will be using, study it but don't change anything, yet. */
-
+import data from '/components/Article.js';
 let menuItems = [
   'Students',
   'Faculty',
@@ -22,6 +22,15 @@ let menuItems = [
 
   Step 2: Inside the function, iterate over the array creating a list item <li> element for each item in the array. 
   Add those items to the <ul>
+
+*/
+
+  let menuMaker = (_menuItems) => {
+    return `<div class="menu"><ul>${_menuItems.map(item=>`<li><a href="?${item.replace(/[^\w]/g,"")}">${item}</li>`).join("")}</ul></div>`;
+  }
+  console.log(menuMaker(menuItems));
+  
+/*
 
   Step 3: Using a DOM selector, select the menu button (the element with a class of 'menu-button') currently on the DOM.
 
