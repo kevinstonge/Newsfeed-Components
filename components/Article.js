@@ -102,7 +102,13 @@ const data = [
   Hint: You will need to use createElement more than once here!
 
   Your function should take either an object as its one argument, or 5 separate strings mapping to each property of an article object.
+*/
+const articleMaker = (articles) => {
+  let articleDiv = document.createElement("div");
+  let expandButton = document.createElement("span");
 
+}
+/*
   Step 2: Add an event listener to the expandButton span. This listener should toggle the class 'article-open' on the 'article' div.
 
   Step 3: Don't forget to return something from your function!
