@@ -104,16 +104,74 @@ const data = [
   Your function should take either an object as its one argument, or 5 separate strings mapping to each property of an article object.
 */
 const articleMaker = (articles) => {
-  let articleDiv = document.createElement("div");
-  let expandButton = document.createElement("span");
-
+  let articleElements = []
+  const articleStructure = { 
+    title: { element: "h2", classList: "" },
+    date: { element: "p", classList: "date" },
+    firstParagraph: { element: "p", classList: "" },
+    secondParagraph: { element: "p", classList: "" },
+    thirdParagraph: { element: "p", classList: "" },
+  }
+  articles.forEach((article,index)=>{
+    const articleDiv = document.createElement("div");
+    articleDiv.classList.add("article");
+    articleDiv.id = `articleDiv${index}`;
+    Object.keys(articleStructure).forEach(key=>{
+      const element = document.createElement(articleStructure[key].element)
+      if (articleStructure[key].classList !== "") { element.classList.add(articleStructure[key].classList) }
+      element.innerText = article[key]
+      articleDiv.appendChild(element)
+    })
+    let expandButton = document.createElement("span");
+    expandButton.classList.add("expandButton");
+    expandButton.innerText = "+";
+    expandButton.id = `expandButton${index}`; //use this to determine containing div when clicked
+    expandButton.addEventListener("click",e=>{
+      document.querySelector(`#articleDiv${index}`).classList.toggle("article-open")
+    })
+    articleDiv.appendChild(expandButton);
+    articleElements.push(articleDiv);
+  })
+  return articleElements;
 }
+let articleElements = articleMaker(data);
+
+const articlesRefresh = () => { 
+  const articleDiv = document.querySelector('.articles');
+  articleDiv.innerHTML = "";
+  articleElements.forEach(e=>document.querySelector('.articles').appendChild(e))
+}
+
+
+
 /*
   Step 2: Add an event listener to the expandButton span. This listener should toggle the class 'article-open' on the 'article' div.
 
   Step 3: Don't forget to return something from your function!
+*/
 
+//I moved this to the articleMaker function so that when new articles are added, the event listener is added for each one
+// document.querySelectorAll(".expandButton").forEach(clickedElement=>
+//   clickedElement.addEventListener("click",e=>{
+//     document.querySelector(`#${clickedElement.id.replace("expandButton","articleDiv")}`).classList.toggle("article-open")
+//   })
+// )
+
+/*
   Step 4: Outside your function, loop over the data. At each iteration you'll use your component to create an article and append it to the DOM inside the 'articles' div.
+
+  done above
 
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new article.
 */
+
+data.push({
+  title: "this is my article title",
+  date: "July 8, 2020",
+  firstParagraph: "lorem ipsum",
+  secondParagraph: "lorem ipsum",
+  thirdParagraph: "lorem ipsum",
+})
+
+articleElements = articleMaker(data);
+articlesRefresh();  
