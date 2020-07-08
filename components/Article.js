@@ -124,10 +124,13 @@ const articleMaker = (articles) => {
     })
     let expandButton = document.createElement("span");
     expandButton.classList.add("expandButton");
-    expandButton.innerText = "+";
+    expandButton.style.fontFamily = "monospace";
+    expandButton.innerText = "[+]";
     expandButton.id = `expandButton${index}`; //use this to determine containing div when clicked
     expandButton.addEventListener("click",e=>{
+      let _articleDiv = document.querySelector(`#articleDiv${index}`);
       document.querySelector(`#articleDiv${index}`).classList.toggle("article-open")
+      expandButton.innerText = (Array.from(articleDiv.classList).includes("article-open")) ? "[-]" : "[+]";
     })
     articleDiv.appendChild(expandButton);
     articleElements.push(articleDiv);
