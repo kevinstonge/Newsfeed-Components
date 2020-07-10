@@ -177,4 +177,50 @@ data.push({
 })
 
 articleElements = articleMaker(data);
-articlesRefresh();  
+articlesRefresh(); 
+
+//create and insert new article button:
+let newArticleButtonDiv = document.createElement("div");
+newArticleButtonDiv.style = "text-align: center;"
+let newArticleButton = document.createElement("button");
+newArticleButton.innerText = "new article";
+newArticleButton.style = "background-color: #222; color: #eee; padding: 1rem; font-size: 1.2rem;"
+newArticleButton.addEventListener("click",()=>toggleFormDisplay())
+newArticleButtonDiv.appendChild(newArticleButton);
+document.body.appendChild(newArticleButtonDiv);
+
+//create and insert new article form
+const formDiv = document.createElement("div");
+formDiv.style = "width: 90vw; height: 70vh; background-color: #444; color: #fff; position: absolute; top: 15vh; left: 5vw; z-index: 10; box-shadow: 1rem 1rem 1rem black; border-radius: 1rem; border: 0.1rem outset #666; flex-direction: column; justify-content: flex-start; align-items: center;"
+formDiv.style.display = "flex"; //change me to 'none' after testing!
+//form header and close button
+const formHeader = document.createElement("div");
+const formHeaderText = document.createElement("p");
+formHeaderText.innerText = "create new article:"
+const formHeaderClose = document.createElement("p");
+formHeaderClose.innerText = "X";
+formHeaderClose.style = "color: red; cursor: pointer;"
+formHeaderClose.addEventListener('click',()=>toggleFormDisplay())
+formHeader.appendChild(formHeaderText);
+formHeader.appendChild(formHeaderClose);
+formHeader.style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%; padding: 0 1rem;"
+formDiv.appendChild(formHeader);
+document.body.appendChild(formDiv);
+//form input
+const titleInput = document.createElement('input');
+
+
+
+//event listener for escape key to hide new article form
+window.addEventListener("keydown",e=>(e.key=="Escape" && formDiv.style.display=="flex") ? toggleFormDisplay() : null )
+
+function toggleFormDisplay() {
+  formDiv.style.display = (formDiv.style.display=="flex") ? "none" : "flex";
+}
+
+
+function createNewArticle() {
+  //create form
+  
+  console.log('create new');
+}
