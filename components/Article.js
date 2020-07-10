@@ -243,6 +243,9 @@ window.addEventListener("keydown",e=>(e.key=="Escape" && formDiv.style.display==
 
 function toggleFormDisplay() {
   formDiv.style.display = (formDiv.style.display=="flex") ? "none" : "flex";
+  if (formDiv.style.display == "flex") {
+    document.querySelector("#titleInput").focus();
+  }
 }
 
 
@@ -264,11 +267,13 @@ function submitArticle() {
     articleElements = articleMaker(data);
     articlesRefresh(); 
     document.querySelector("#errorMessage").innerText = "";
+    document.querySelector("#titleInput").value = "";
+    document.querySelector("#firstParagraphInput").value = "";
+    document.querySelector("#secondParagraphInput").value = "";
+    document.querySelector("#thirdParagraphInput").value = "";
     toggleFormDisplay();
   }
   else { 
     document.querySelector("#errorMessage").innerText = "error: your article is incomplete"
   }
-  console.table(title,date,firstParagraph,secondParagraph,thirdParagraph);
-  console.log('create new');
 }
