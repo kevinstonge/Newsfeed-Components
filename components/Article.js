@@ -192,7 +192,7 @@ document.body.appendChild(newArticleButtonDiv);
 //create and insert new article form
 const formDiv = document.createElement("div");
 formDiv.style = "width: 90vw; height: 70vh; background-color: #444; color: #fff; position: absolute; top: 15vh; left: 5vw; z-index: 10; box-shadow: 1rem 1rem 1rem black; border-radius: 1rem; border: 0.1rem outset #666; flex-direction: column; justify-content: flex-start; align-items: center;"
-formDiv.style.display = "flex"; //change me to 'none' after testing!
+formDiv.style.display = "none";
 //form header and close button
 const formHeader = document.createElement("div");
 const formHeaderText = document.createElement("p");
@@ -207,9 +207,36 @@ formHeader.style = "display: flex; flex-direction: row; justify-content: space-b
 formDiv.appendChild(formHeader);
 document.body.appendChild(formDiv);
 //form input
+  //title
+const titleLabel = document.createElement('label');
+titleLabel.innerText = "title:"
+titleLabel.style = "display: flex; flex-direction: column; width: 90%; margin: 0.5rem auto;"
 const titleInput = document.createElement('input');
-
-
+titleInput.id="titleInput";
+titleLabel.appendChild(titleInput);
+formDiv.appendChild(titleLabel);
+["firstParagraph","secondParagraph","thirdParagraph"].forEach(e=>{
+  const pLabel = document.createElement('label');
+  pLabel.innerText = `${e}:`;
+  pLabel.style = "display: flex; flex-direction: column; width: 90%; margin: 0.5rem auto;"
+  const pInput = document.createElement('textarea');
+  pInput.id=`${e}Input`;
+  pInput.style="height: 10vh;"
+  pLabel.appendChild(pInput);
+  formDiv.appendChild(pLabel);
+})
+//form submit button
+const submitArticleButton = document.createElement('button');
+submitArticleButton.innerText = "submit";
+submitArticleButton.style = "margin: 0.5rem auto; background-color: #555; color: #fff; font-size: 1.2rem; padding: 0.2rem;"
+submitArticleButton.addEventListener('click',submitArticle)
+formDiv.appendChild(submitArticleButton);
+//form error message
+const errorMessage = document.createElement('p');
+errorMessage.id = "errorMessage";
+errorMessage.innerText = "";
+errorMessage.style = "margin: 0.5rem auto; color: #f00;"
+formDiv.appendChild(errorMessage);
 
 //event listener for escape key to hide new article form
 window.addEventListener("keydown",e=>(e.key=="Escape" && formDiv.style.display=="flex") ? toggleFormDisplay() : null )
@@ -219,8 +246,29 @@ function toggleFormDisplay() {
 }
 
 
-function createNewArticle() {
+function submitArticle() {
   //create form
-  
+  let title = document.querySelector("#titleInput").value;
+  let date = new Date();
+  let firstParagraph = document.querySelector("#firstParagraphInput").value;
+  let secondParagraph = document.querySelector("#secondParagraphInput").value;
+  let thirdParagraph = document.querySelector("#thirdParagraphInput").value;
+  if (title != "" && firstParagraph != "" && secondParagraph != "" && thirdParagraph != "") { 
+    data.push({
+      title: title,
+      date: date,
+      firstParagraph: firstParagraph,
+      secondParagraph: secondParagraph,
+      thirdParagraph: thirdParagraph,
+    })
+    articleElements = articleMaker(data);
+    articlesRefresh(); 
+    document.querySelector("#errorMessage").innerText = "";
+    toggleFormDisplay();
+  }
+  else { 
+    document.querySelector("#errorMessage").innerText = "error: your article is incomplete"
+  }
+  console.table(title,date,firstParagraph,secondParagraph,thirdParagraph);
   console.log('create new');
 }
