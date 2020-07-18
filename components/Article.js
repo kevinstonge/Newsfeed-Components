@@ -102,12 +102,178 @@ const data = [
   Hint: You will need to use createElement more than once here!
 
   Your function should take either an object as its one argument, or 5 separate strings mapping to each property of an article object.
+*/
+const articleMaker = (articles) => {
+  let articleElements = []
+  const articleStructure = { 
+    title: { element: "h2", classList: "" },
+    date: { element: "p", classList: "date" },
+    firstParagraph: { element: "p", classList: "" },
+    secondParagraph: { element: "p", classList: "" },
+    thirdParagraph: { element: "p", classList: "" },
+  }
+  articles.forEach((article,index)=>{
+    const articleDiv = document.createElement("div");
+    articleDiv.classList.add("article");
+    articleDiv.id = `articleDiv${index}`;
+    Object.keys(articleStructure).forEach(key=>{
+      const element = document.createElement(articleStructure[key].element)
+      if (articleStructure[key].classList !== "") { element.classList.add(articleStructure[key].classList) }
+      element.innerText = article[key]
+      articleDiv.appendChild(element)
+    })
+    let expandButton = document.createElement("span");
+    expandButton.classList.add("expandButton");
+    expandButton.style.fontFamily = "monospace";
+    expandButton.innerText = "[+]";
+    expandButton.id = `expandButton${index}`; //use this to determine containing div when clicked
+    expandButton.addEventListener("click",e=>{
+      let _articleDiv = document.querySelector(`#articleDiv${index}`);
+      document.querySelector(`#articleDiv${index}`).classList.toggle("article-open")
+      expandButton.innerText = (Array.from(articleDiv.classList).includes("article-open")) ? "[-]" : "[+]";
+    })
+    articleDiv.appendChild(expandButton);
+    articleElements.push(articleDiv);
+  })
+  return articleElements;
+}
+let articleElements = articleMaker(data);
 
+const articlesRefresh = () => { 
+  const articleDiv = document.querySelector('.articles');
+  articleDiv.innerHTML = "";
+  articleElements.forEach(e=>document.querySelector('.articles').appendChild(e))
+}
+
+
+
+/*
   Step 2: Add an event listener to the expandButton span. This listener should toggle the class 'article-open' on the 'article' div.
 
   Step 3: Don't forget to return something from your function!
+*/
 
+//I moved this to the articleMaker function so that when new articles are added, the event listener is added for each one
+// document.querySelectorAll(".expandButton").forEach(clickedElement=>
+//   clickedElement.addEventListener("click",e=>{
+//     document.querySelector(`#${clickedElement.id.replace("expandButton","articleDiv")}`).classList.toggle("article-open")
+//   })
+// )
+
+/*
   Step 4: Outside your function, loop over the data. At each iteration you'll use your component to create an article and append it to the DOM inside the 'articles' div.
+
+  done above
 
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new article.
 */
+
+data.push({
+  title: "this is my article title",
+  date: "July 8, 2020",
+  firstParagraph: "lorem ipsum",
+  secondParagraph: "lorem ipsum",
+  thirdParagraph: "lorem ipsum",
+})
+
+articleElements = articleMaker(data);
+articlesRefresh(); 
+
+//create and insert new article button:
+let newArticleButtonDiv = document.createElement("div");
+newArticleButtonDiv.style = "text-align: center;"
+let newArticleButton = document.createElement("button");
+newArticleButton.innerText = "new article";
+newArticleButton.style = "background-color: #222; color: #eee; padding: 1rem; font-size: 1.2rem;"
+newArticleButton.addEventListener("click",()=>toggleFormDisplay())
+newArticleButtonDiv.appendChild(newArticleButton);
+document.body.appendChild(newArticleButtonDiv);
+
+//create and insert new article form
+const formDiv = document.createElement("div");
+formDiv.style = "width: 90vw; height: 70vh; background-color: #444; color: #fff; position: absolute; top: 15vh; left: 5vw; z-index: 10; box-shadow: 1rem 1rem 1rem black; border-radius: 1rem; border: 0.1rem outset #666; flex-direction: column; justify-content: flex-start; align-items: center;"
+formDiv.style.display = "none";
+//form header and close button
+const formHeader = document.createElement("div");
+const formHeaderText = document.createElement("p");
+formHeaderText.innerText = "create new article:"
+const formHeaderClose = document.createElement("p");
+formHeaderClose.innerText = "X";
+formHeaderClose.style = "color: red; cursor: pointer;"
+formHeaderClose.addEventListener('click',()=>toggleFormDisplay())
+formHeader.appendChild(formHeaderText);
+formHeader.appendChild(formHeaderClose);
+formHeader.style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%; padding: 0 1rem;"
+formDiv.appendChild(formHeader);
+document.body.appendChild(formDiv);
+//form input
+  //title
+const titleLabel = document.createElement('label');
+titleLabel.innerText = "title:"
+titleLabel.style = "display: flex; flex-direction: column; width: 90%; margin: 0.5rem auto;"
+const titleInput = document.createElement('input');
+titleInput.id="titleInput";
+titleLabel.appendChild(titleInput);
+formDiv.appendChild(titleLabel);
+["firstParagraph","secondParagraph","thirdParagraph"].forEach(e=>{
+  const pLabel = document.createElement('label');
+  pLabel.innerText = `${e}:`;
+  pLabel.style = "display: flex; flex-direction: column; width: 90%; margin: 0.5rem auto;"
+  const pInput = document.createElement('textarea');
+  pInput.id=`${e}Input`;
+  pInput.style="height: 10vh;"
+  pLabel.appendChild(pInput);
+  formDiv.appendChild(pLabel);
+})
+//form submit button
+const submitArticleButton = document.createElement('button');
+submitArticleButton.innerText = "submit";
+submitArticleButton.style = "margin: 0.5rem auto; background-color: #555; color: #fff; font-size: 1.2rem; padding: 0.2rem;"
+submitArticleButton.addEventListener('click',submitArticle)
+formDiv.appendChild(submitArticleButton);
+//form error message
+const errorMessage = document.createElement('p');
+errorMessage.id = "errorMessage";
+errorMessage.innerText = "";
+errorMessage.style = "margin: 0.5rem auto; color: #f00;"
+formDiv.appendChild(errorMessage);
+
+//event listener for escape key to hide new article form
+window.addEventListener("keydown",e=>(e.key=="Escape" && formDiv.style.display=="flex") ? toggleFormDisplay() : null )
+
+function toggleFormDisplay() {
+  formDiv.style.display = (formDiv.style.display=="flex") ? "none" : "flex";
+  if (formDiv.style.display == "flex") {
+    document.querySelector("#titleInput").focus();
+  }
+}
+
+
+function submitArticle() {
+  //create form
+  let title = document.querySelector("#titleInput").value;
+  let date = new Date();
+  let firstParagraph = document.querySelector("#firstParagraphInput").value;
+  let secondParagraph = document.querySelector("#secondParagraphInput").value;
+  let thirdParagraph = document.querySelector("#thirdParagraphInput").value;
+  if (title != "" && firstParagraph != "" && secondParagraph != "" && thirdParagraph != "") { 
+    data.push({
+      title: title,
+      date: date,
+      firstParagraph: firstParagraph,
+      secondParagraph: secondParagraph,
+      thirdParagraph: thirdParagraph,
+    })
+    articleElements = articleMaker(data);
+    articlesRefresh(); 
+    document.querySelector("#errorMessage").innerText = "";
+    document.querySelector("#titleInput").value = "";
+    document.querySelector("#firstParagraphInput").value = "";
+    document.querySelector("#secondParagraphInput").value = "";
+    document.querySelector("#thirdParagraphInput").value = "";
+    toggleFormDisplay();
+  }
+  else { 
+    document.querySelector("#errorMessage").innerText = "error: your article is incomplete"
+  }
+}

@@ -6,11 +6,12 @@
   padding: 0 20px 25px;
   border: 1px solid lightgrey;
   border-radius: 10px;
-  background-color: white;
+  background-color: #555;
   position: relative;
   height: 50px;
   overflow: hidden;
   box-shadow: 2px 2px 2px lightgrey;
+  transition: height 1s;
 
   h2 {
     font-size: 28px;
@@ -31,13 +32,14 @@
 
   .expandButton {
     position: absolute;
-    bottom: 0;
-    left: 50%;
+    top: 12px;
+    left: calc(100% - 22px);
     font-size: 12px;
-    color: grey;
+    color: white;
+    padding: 5px;
     cursor: pointer;
     transform: translate(-50%);
-    background-color: white;
+    background-color: #444;
   }
 }
 
